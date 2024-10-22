@@ -20,6 +20,17 @@ Before you can run this program, ensure you have the dependencies listed in [req
 Ensure you have PostgreSQL installed and running. You also need to create a database where the extracted XML information will be stored.
 After it, you need to add you personal PG_HOST_DEBUG, PG_PORT_DEBUG, PG_NAME_DEBUG, and PG_LOGIN_DEBUG to [.env](.env)
 
+### Dotenv file example
+PG_DEBUG="1" # set 0 to connect to main bd, set 1 to connect to DEBUG bd\
+PG_HOST="abc.com"\
+PG_PORT="1234"\
+PG_LOGIN="Ivan_Ivanov"\
+PG_PASS="Ivanovich_1994"\
+PG_HOST_DEBUG="localhost"\
+PG_PORT_DEBUG="5432"\
+PG_NAME_DEBUG="local_Ivanovich_1994"\
+PG_LOGIN_DEBUG="Ivan_Ivanov_home_PC"
+
 
 ## Usage
 
