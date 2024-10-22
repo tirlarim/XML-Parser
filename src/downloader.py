@@ -40,11 +40,9 @@ class Downloader:
         return None
 
     def download_mp3s_from_feed(self, feed, download_directory: str):
-        saved_files = []
-
         if not feed or 'entries' not in feed:
             logger.error("No entries in feed to download MP3 files.")
-            return saved_files
+            return
 
         os.makedirs(download_directory, exist_ok=True)
 
@@ -62,9 +60,6 @@ class Downloader:
                         continue
                     mp3_file_path = os.path.join(download_directory, mp3_file_name)
                     self.download_mp3(mp3_url, mp3_file_path)
-
-        logger.info(f"Downloaded MP3 files: {saved_files}")
-        return saved_files
 
     def download_mp3(self, mp3_url: str, save_path: str):
         if os.path.exists(save_path):
