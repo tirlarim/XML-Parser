@@ -42,7 +42,7 @@ class RSSFeedPrinter:
             if self.fields_to_print:
                 for key in self.fields_to_print:
                     color = self.colors.get(key, None)
-                    value = entry.get(key, "N/A")
+                    value = entry.get(key, None)
                     if value is None:
                         logger.warning(f"Unable to find {key} key in entry. Skipped.")
                         continue
