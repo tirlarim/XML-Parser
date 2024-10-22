@@ -67,6 +67,9 @@ class Downloader:
         return saved_files
 
     def download_mp3(self, mp3_url: str, save_path: str):
+        if os.path.exists(save_path):
+            logger.info(f"MP3 file already exists at {save_path}, skipping download.")
+            return True
         response = self._download(mp3_url)
         if response:
             try:
