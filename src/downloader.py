@@ -2,9 +2,11 @@ import os
 
 import feedparser
 import requests
+
 from src.logger import Logger
 
 logger = Logger().get_logger()
+
 
 class Downloader:
     def download_feed(self, url: str):
@@ -17,7 +19,7 @@ class Downloader:
             return feed
         return None
 
-    def download_feed_on_disk(self, url: str, path: str):
+    def download_feed_on_disk(self, url: str, save_path: str):
         response = self._download(url)
         if response:
             feed = feedparser.parse(response.content)
@@ -26,16 +28,53 @@ class Downloader:
                 return None
 
             try:
-                os.makedirs(os.path.dirname(path), exist_ok=True)
-                with open(path, 'wb') as file:
+                os.makedirs(os.path.dirname(save_path), exist_ok=True)
+                with open(save_path, 'wb') as file:
                     file.write(response.content)
 
-                logger.info(f"Feed saved successfully at {path}")
+                logger.info(f"Feed saved successfully at {save_path}")
                 return feed
             except IOError as e:
                 logger.exception(f"Error saving the feed to disk: {e}")
                 return None
         return None
+
+    def download_mp3s_from_feed(self, feed, download_directory: str):
+        saved_files = []
+
+        if not feed or 'entries' not in feed:
+            logger.error("No entries in feed to download MP3 files.")
+            return saved_files
+
+        os.makedirs(download_directory, exist_ok=True)
+
+        for entry in feed.entries:
+            if 'enclosure' in entry:  # Unclear is only one audio per entry can be.
+                enclosure = entry.get("enclosure", "N/A")
+                if enclosure.get('type') == 'audio/mpeg':
+                    guid = entry.get('guid', None)
+                    mp3_url = enclosure.get('href')
+                    mp3_file_name = f"{guid}.mp3"
+                    mp3_file_path = os.path.join(download_directory, mp3_file_name)
+
+                    if self.download_mp3(mp3_url, mp3_file_path):
+                        saved_files.append(mp3_file_path)
+
+        logger.info(f"Downloaded MP3 files: {saved_files}")
+        return saved_files
+
+    def download_mp3(self, mp3_url: str, save_path: str):
+        response = self._download(mp3_url)
+        if response:
+            try:
+                with open(save_path, 'wb') as file:
+                    file.write(response.content)
+                logger.info(f"MP3 file saved successfully at {save_path}")
+                return True
+            except IOError as e:
+                logger.exception(f"Error saving MP3 file to disk: {e}")
+                return False
+        return False
 
     @staticmethod
     def _download(url: str):
