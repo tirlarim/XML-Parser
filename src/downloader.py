@@ -94,6 +94,7 @@ def main():
     downloader = Downloader()
     rss_url = "https://feeds.simplecast.com/8W_aZ33f"
     feed = downloader.download_feed(rss_url)
+    downloader.download_mp3s_from_feed(feed, "media/audio")
 
 
 if __name__ == "__main__":
