@@ -34,7 +34,7 @@ PG_LOGIN_DEBUG="Ivan_Ivanov_home_PC"
 
 ## Usage
 
-python ./main.py
+`python ./main.py`
 
 ## License
 
