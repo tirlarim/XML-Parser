@@ -178,7 +178,7 @@ class PostgresDB:
             itunes_summary = entry.summary if 'summary' in entry else None
             itunes_subtitle = entry.subtitle if 'subtitle' in entry else None
             itunes_explicit = entry.itunes_explicit == 'true' if 'itunes_explicit' in entry else None
-            itunes_episode_type = entry.itunes_episodetype if 'itunes_episodetype' in entry else None
+            itunes_episode_type = entry.itunes_episodetype if 'itunes_episodetype' in entry else None  # NOTE: itunes_episodetype is not a typo
             itunes_episode = entry.itunes_episode if 'itunes_episode' in entry else None
             cursor.execute(insert_podcast_item, (
                 guid, title, description, pub_date, link, content_encoded,
@@ -276,7 +276,7 @@ class PostgresDB:
 
 def upload_all():
     db = PostgresDB()
-    # db.delete_item("8a645486-2b2b-46d0-97fe-61afeb49a1af")
+    # db.delete_item("8a645486-2b2b-46d0-97fe-61afeb49a1af") # can be uncomented to test delete
     db.create_cv_tables(drop=DEBUG)  # Be careful with drop in production
     rss_url = "https://feeds.simplecast.com/8W_aZ33f"
     downloader = Downloader()
