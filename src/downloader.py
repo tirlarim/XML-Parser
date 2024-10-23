@@ -1,4 +1,5 @@
 import os
+import uuid
 
 import feedparser
 import requests
@@ -53,11 +54,12 @@ class Downloader:
             for link in entry["links"]:
                 if link.get('type') == 'audio/mpeg':
                     guid = entry.get('id', None)
-                    mp3_url = link.get('href')
-                    mp3_file_name = f"{guid}.mp3"
                     if not guid:
                         logger.error("No GUID found for entry; skipping MP3 download.")
                         continue
+                    guid = str(uuid.UUID(guid))
+                    mp3_url = link.get('href')
+                    mp3_file_name = f"{guid}.mp3"
                     mp3_file_path = os.path.join(download_directory, mp3_file_name)
                     self.download_mp3(mp3_url, mp3_file_path)
 
