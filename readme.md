@@ -15,6 +15,7 @@ Before you can run this program, ensure you that you set up environment and have
 
 ```bash
 python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
