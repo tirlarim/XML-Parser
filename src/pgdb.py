@@ -15,7 +15,7 @@ load_dotenv()
 
 logger = Logger().get_logger()
 
-DEBUG = bool(int(os.getenv('PG_DEBUG')))
+DEBUG = bool(int(os.getenv('PG_DEBUG', '0')))
 
 
 class PostgresDB:

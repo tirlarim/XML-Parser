@@ -11,9 +11,12 @@ Features
 
 Prerequisites
 
-Before you can run this program, ensure you have the dependencies listed in [requirements.txt](requirements.txt) installed:
+Before you can run this program, ensure you that you set up environment and have the dependencies listed in [requirements.txt](requirements.txt) installed:
 
-`pip install -r requirements.txt`
+```bash
+python3 -m venv .venv
+pip install -r requirements.txt
+```
 
 ## Setup
 
@@ -34,7 +37,7 @@ PG_LOGIN_DEBUG="Ivan_Ivanov_home_PC"
 
 ## Usage
 
-`python ./main.py`
+`python -m src.main`
 
 ## License
 

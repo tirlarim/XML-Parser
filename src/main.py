@@ -23,7 +23,7 @@ def main():
         return
     printer.print_feed(feed)
 
-    db.create_cv_tables(drop=bool(int(os.getenv('PG_DEBUG'))))  # Be careful with drop in production
+    db.create_cv_tables(drop=bool(int(os.getenv('PG_DEBUG', '0'))))  # Be careful with drop in production
     db.insert_items(feed)
 
     downloader.download_mp3s_from_feed(feed, "./media/audio")
