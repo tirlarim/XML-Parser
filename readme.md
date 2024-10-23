@@ -2,14 +2,14 @@
 
 This Python program downloads an XML file, parses it to extract important information, saves the extracted information into a PostgreSQL database, and downloads music from a link provided in the XML file to a specified directory on the PC.
 
-Features
+## Features
 
 	•	Downloads XML file from a given URL.
 	•	Parses the XML file to extract important information.
 	•	Saves the parsed information into a PostgreSQL database.
 	•	Downloads audio files from links in the XML and saves them to a specified directory.
 
-Prerequisites
+## Prerequisites
 
 Before you can run this program, ensure you that you set up environment and have the dependencies listed in [requirements.txt](requirements.txt) installed:
 
