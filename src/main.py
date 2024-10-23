@@ -1,15 +1,9 @@
-import os
-
-from dotenv import load_dotenv
-
 from src.downloader import Downloader
 from src.feed_printer import RSSFeedPrinter
 from src.logger import Logger
 from src.pgdb import PostgresDB
 
 logger = Logger().get_logger()
-
-load_dotenv()
 
 
 def main():
@@ -23,7 +17,7 @@ def main():
         return
     printer.print_feed(feed)
 
-    db.create_cv_tables(drop=bool(int(os.getenv('PG_DEBUG', '0'))))  # Be careful with drop in production
+    db.create_cv_tables(drop=False)  # Be careful with drop in production
     db.insert_items(feed)
 
     downloader.download_mp3s_from_feed(feed, "./media/audio")

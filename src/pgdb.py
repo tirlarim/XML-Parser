@@ -1,4 +1,5 @@
 import os
+import uuid
 from datetime import datetime
 from functools import wraps
 
@@ -85,7 +86,7 @@ class PostgresDB:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS podcast_item (
             id SERIAL,
-            guid UUID NOT NULL,
+            guid UUID UNIQUE NOT NULL,
             title TEXT NOT NULL,
             description TEXT,
             pub_date TIMESTAMP,
@@ -129,6 +130,10 @@ class PostgresDB:
     def insert_items(self, connection, feed):
         cursor = connection.cursor()
 
+        check_existing_podcast_item = """
+        SELECT id FROM podcast_item WHERE guid = %s;
+        """
+
         insert_podcast_item = """
         INSERT INTO podcast_item (
             guid, title, description, pub_date, link, content_encoded,
@@ -163,6 +168,12 @@ class PostgresDB:
 
         for entry in feed.entries:  # TODO: rewrite with executemany()
             guid = entry.guid
+            normalized_guid = str(uuid.UUID(guid))
+            cursor.execute(check_existing_podcast_item, (normalized_guid,))
+            existing_item = cursor.fetchone()
+            if existing_item:
+                logger.info(f"Item with UUID {normalized_guid} is already saved. Skipped.")
+                continue
             title = entry.title
             description = entry.description if 'description' in entry else None
             pub_date = datetime.strptime(entry.published,
@@ -181,7 +192,7 @@ class PostgresDB:
             itunes_episode_type = entry.itunes_episodetype if 'itunes_episodetype' in entry else None  # NOTE: itunes_episodetype is not a typo
             itunes_episode = entry.itunes_episode if 'itunes_episode' in entry else None
             cursor.execute(insert_podcast_item, (
-                guid, title, description, pub_date, link, content_encoded,
+                normalized_guid, title, description, pub_date, link, content_encoded,
                 enclosure_length, enclosure_type, enclosure_url, itunes_title,
                 itunes_duration, itunes_summary, itunes_subtitle, itunes_explicit,
                 itunes_episode_type, itunes_episode
@@ -225,9 +236,9 @@ class PostgresDB:
             cursor.execute(delete_query, (applicant_uuid,))
             connection.commit()
             if cursor.rowcount > 0:
-                print(f"Item with GUID {applicant_uuid} successfully deleted.")
+                print(f"Item with UUID {applicant_uuid} successfully deleted.")
             else:
-                print(f"No item found with GUID {applicant_uuid}.")
+                print(f"No item found with UUID {applicant_uuid}.")
 
         except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
